@@ -7,6 +7,7 @@ var logger = require('morgan');
 // use routes from app_server
 var indexRouter  = require('./app_server/routes/index');
 var travelRouter = require('./app_server/routes/travel');
+var usersRouter = require('./app_server/routes/users');
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.get('/healthz', (req, res) => {
 
 app.use('/', indexRouter);
 app.use('/', travelRouter);
+app.use('/', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
