@@ -4,27 +4,35 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// use routes from app_server
+var indexRouter  = require('./app_server/routes/index');
+var travelRouter = require('./app_server/routes/travel');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// views now live in app_server/views
+app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'hbs');
+
+// register Handlebars partials
+const hbs = require('hbs');
+hbs.registerPartials(path.join(__dirname, 'app_server', 'views', 'partials'));
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Check if ok
 app.get('/healthz', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
 });
 
-
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', travelRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
