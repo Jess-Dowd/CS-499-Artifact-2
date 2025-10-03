@@ -8,6 +8,8 @@ var logger = require('morgan');
 var indexRouter  = require('./app_server/routes/index');
 var travelRouter = require('./app_server/routes/travel');
 var usersRouter = require('./app_server/routes/users');
+require('./app_api/models/db');                       // connects to Mongo + loads models
+var apiRouter = require('./app_api/routes/index');    // API routes
 
 var app = express();
 
@@ -35,6 +37,7 @@ app.get('/healthz', (req, res) => {
 app.use('/', indexRouter);
 app.use('/', travelRouter);
 app.use('/', usersRouter);
+app.use('/api', apiRouter);  
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
