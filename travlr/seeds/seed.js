@@ -5,22 +5,34 @@ require('../app_api/models/db'); // sets up connection + models
 const Trip = require('../app_api/models/trips');
 const fs = require('fs');
 
+// turn "Gale Reef" => "GALE-REEF", remove weird punctuation
+function makeCode(name = '') {
+  return name
+    .normalize('NFKD')                 // normalize smart quotes/accents
+    .replace(/[^\w\s-]/g, '')          // drop non-word chars
+    .trim()
+    .replace(/\s+/g, '-')              // spaces -> hyphen
+    .toUpperCase();
+}
+
 (async () => {
   try {
     const dataPath = path.resolve(__dirname, '..', 'data', 'trips.json');
     const raw = fs.readFileSync(dataPath, 'utf8');
     const items = JSON.parse(raw);
 
-    // normalize fields for schema
     const docs = items.map(t => ({
-    name:  t.name,
-    image: t.image,
-    desc1: t.desc1,
-    desc2: t.desc2
+      code:  t.code || makeCode(t.name),
+      name:  t.name,
+      image: t.image,
+      desc1: t.desc1,
+      desc2: t.desc2,
+      // optional fields
+      // length: t.length ?? null,
+      // price: Number.isFinite(t.price) ? t.price : null,
+      // start: t.start ? new Date(t.start) : null
     }));
 
-
-    // wipe + insert (safe for dev)
     await Trip.deleteMany({});
     const result = await Trip.insertMany(docs);
     console.log(`Seeded trips: ${result.length}`);

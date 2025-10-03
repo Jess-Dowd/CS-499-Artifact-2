@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const ctrl = require('../controllers/trips');
 
-router.get('/trips',      ctrl.listTrips);     // GET /api/trips
-router.get('/trips/:code', ctrl.readTrip);     // GET /api/trips/SEA001
+router.get('/trips', ctrl.listTrips);
+router.get('/trips/:tripCode', ctrl.readTrip);
 
 module.exports = router;

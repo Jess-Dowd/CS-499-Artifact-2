@@ -6,12 +6,13 @@ const tripSchema = new mongoose.Schema({
   image: { type: String },                              
   desc1: { type: String },
   desc2: { type: String },
+  code: { type: String, required: true, unique: true, trim: true },
 
   // optional extras for later
-  code:   { type: String, trim: true, unique: false },
+  
   length: { type: String },
   price:  { type: Number, min: 0 },
   start:  { type: Date }
-}, { timestamps: true });
+}, { timestamps: false });
 
 module.exports = mongoose.model('Trip', tripSchema, 'trips');
