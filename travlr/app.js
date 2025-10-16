@@ -10,6 +10,7 @@ var travelRouter = require('./app_server/routes/travel');
 var usersRouter = require('./app_server/routes/users');
 require('./app_api/models/db');                       // connects to Mongo + loads models
 var apiRouter = require('./app_api/routes/index');    // API routes
+const cors = require('cors');
 
 var app = express();
 
@@ -28,6 +29,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+//enable CORS
+app.use('/api', cors({ origin: 'http://localhost:4200' }));
 
 // Check if ok
 app.get('/healthz', (req, res) => {

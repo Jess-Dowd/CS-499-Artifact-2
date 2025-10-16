@@ -21,17 +21,19 @@ function makeCode(name = '') {
     const raw = fs.readFileSync(dataPath, 'utf8');
     const items = JSON.parse(raw);
 
-    const docs = items.map(t => ({
-      code:  t.code || makeCode(t.name),
-      name:  t.name,
-      image: t.image,
-      desc1: t.desc1,
-      desc2: t.desc2,
-      // optional fields
-      // length: t.length ?? null,
-      // price: Number.isFinite(t.price) ? t.price : null,
-      // start: t.start ? new Date(t.start) : null
-    }));
+  const docs = items.map(t => ({
+    code:  t.code || makeCode(t.name),
+    name:  t.name,
+    image: t.image,         // keep "/images/reef1.jpg" — controller strips it
+    desc1: t.desc1,
+    desc2: t.desc2,
+
+    // optional niceties for the SPA
+    resort: t.resort || `${t.name.split(' ')[0]} Resort`,
+    length: t.length || '3 days',
+    perPerson: t.perPerson || t.price || 399
+  }));
+
 
     await Trip.deleteMany({});
     const result = await Trip.insertMany(docs);
