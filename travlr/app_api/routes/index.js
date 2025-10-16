@@ -5,5 +5,8 @@ const ctrl = require('../controllers/trips');
 
 router.get('/trips', ctrl.listTrips);
 router.get('/trips/:tripCode', ctrl.readTrip);
+router.post('/trips', ctrl.createTrip);
+router.put('/trips/:tripCode', ctrl.tripsUpdateTrip);
+
 
 module.exports = router;

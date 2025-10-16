@@ -23,4 +23,5 @@ export interface Trip {
   perPerson: number;
   image: string;
   description: string;
+  start: string;
 }
