@@ -1,0 +1,13 @@
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <a class="navbar-brand" href="#"><img src="assets/images/logo.png" style="height:32px"></a>
+
+  <div class="navbar-nav ms-auto">
+    <a class="nav-link" routerLink="" routerLinkActive="active">Trips</a>
+
+    <!-- Show when NOT logged in -->
+    <a class="nav-link" routerLink="login" *ngIf="!isLoggedIn()">Log In</a>
+
+    <!-- Show when logged in -->
+    <a class="nav-link" (click)="onLogout()" *ngIf="isLoggedIn()">Log Out</a>
+  </div>
+</nav>

@@ -51,7 +51,7 @@ export class EditTripComponent implements OnInit {
       next: (value: Trip) => {
         this.trip = value;
 
-        // If your API returns Date, convert to yyyy-mm-dd for the <input type="date">
+        // If API returns Date, convert to yyyy-mm-dd for the <input type="date">
         const startStr = value.start
           ? new Date(value.start).toISOString().slice(0, 10)
           : '';

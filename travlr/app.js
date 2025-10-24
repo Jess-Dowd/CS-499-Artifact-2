@@ -12,6 +12,12 @@ require('./app_api/models/db');                       // connects to Mongo + loa
 var apiRouter = require('./app_api/routes/index');    // API routes
 const cors = require('cors');
 
+require('dotenv').config();           
+
+var passport = require('passport');
+require('./app_api/config/passport');
+ 
+
 var app = express();
 
 // view engine setup
@@ -63,5 +69,24 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ message: err.name + ': ' + err.message });
+  }
+  next(err);
+});
+
 
 module.exports = app;
