@@ -36,6 +36,19 @@ function authenticateJWT(req, res, next) {
   }
 }
 
+function requireRole(role) {
+  return function (req, res, next) {
+    if (!req.auth || !req.auth.role) {
+      return res.status(403).json({ message: 'No role in token' });
+    }
+    if (req.auth.role !== role) {
+      return res.status(403).json({ message: 'Forbidden: role ' + req.auth.role + ' cannot do this' });
+    }
+    next();
+  };
+}
+
+
 // trips (public reads)
 router.get('/trips', ctrlTrips.listTrips);
 router.get('/trips/:tripCode', ctrlTrips.readTrip);
@@ -43,8 +56,8 @@ router.get('/trips/:tripCode', ctrlTrips.readTrip);
 // protect writes
 // router.post('/trips', ctrl.createTrip);
 // router.put('/trips/:tripCode', ctrl.tripsUpdateTrip);
-router.post('/trips', authenticateJWT, ctrlTrips.createTrip);
-router.put('/trips/:tripCode', authenticateJWT, ctrlTrips.tripsUpdateTrip);
+router.post('/trips', authenticateJWT, requireRole('admin'), ctrlTrips.createTrip);
+router.put('/trips/:tripCode', authenticateJWT, requireRole('admin'), ctrlTrips.tripsUpdateTrip);
 // (optional) delete
 // router.delete('/trips/:tripCode', authenticateJWT, ctrlTrips.deleteTrip);
 

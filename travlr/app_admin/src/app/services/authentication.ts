@@ -38,11 +38,23 @@ export class AuthenticationService {
     }
   }
 
-  public getCurrentUser(): User {
-    const token = this.getToken();
-    const { email, name } = JSON.parse(atob(token.split('.')[1]));
-    return { email, name } as User;
-    // (Call isLoggedIn() first in your components)
+  public getCurrentUser() {
+  const token = this.getToken();
+  if (!token) {
+    return null;
+  }
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  // token now has: _id, email, name, role
+  return {
+    email: payload.email,
+    name: payload.name,
+    role: payload.role || 'viewer'
+  };
+}
+
+  public isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return !!user && user.role === 'admin';
   }
 
   public login(user: User, passwd: string): void {

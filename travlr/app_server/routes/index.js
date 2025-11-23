@@ -3,7 +3,7 @@ var router = express.Router();
 const ctrlMain = require('../controllers/main');
 
 // /* GET home page. */
-router.get('/', ctrlMain.index); // root → controller
+router.get('/', ctrlMain.index); // root to controller
 // router.get('/', function(req, res, next) {
 //   res.render('index', { title: 'Express' });
 // });

@@ -11,7 +11,7 @@ import { AuthenticationService } from '../services/authentication';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './trip-card.html',
-  styleUrls: ['./trip-card.css']   // ← plural
+  styleUrls: ['./trip-card.css']
 })
 export class TripCard {
   @Input('trip') trip!: Trip;
@@ -28,6 +28,10 @@ export class TripCard {
   
   isLoggedIn(): boolean {
      return this.authenticationService.isLoggedIn(); 
+  }
+
+  public isAdmin() {
+  return this.authenticationService.isAdmin();
   }
 
 }

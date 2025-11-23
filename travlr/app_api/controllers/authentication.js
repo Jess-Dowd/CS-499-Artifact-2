@@ -11,6 +11,7 @@ const register = async (req, res) => {
     if (existing) return res.status(409).json({ message: 'User already exists' });
 
     const user = new User({ email: email.toLowerCase().trim(), name });
+    user.role = req.body.role || 'viewer';
     user.setPassword(password);
     await user.save();
 

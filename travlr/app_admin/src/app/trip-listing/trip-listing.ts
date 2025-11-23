@@ -16,7 +16,7 @@ import { AuthenticationService } from '../services/authentication';
   imports: [CommonModule, TripCard, RouterModule],
   templateUrl: './trip-listing.html',
   styleUrls: ['./trip-listing.css'],
-  providers: [TripDataService]   // as the guide requests
+  providers: [TripDataService]
 })
 export class TripListing implements OnInit {
   trips: Trip[] = [];
@@ -43,6 +43,10 @@ export class TripListing implements OnInit {
 
   public isLoggedIn(): boolean { return this.auth.isLoggedIn(); }
   // public addTrip(){ this.router.navigate(['add']); }
+
+  public isAdmin(): boolean {
+  return this.auth.isAdmin();
+  }
 
 
   public addTrip(): void {

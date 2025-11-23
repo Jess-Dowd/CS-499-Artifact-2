@@ -1,7 +1,7 @@
 // seeds/seed.js
 const path = require('path');
 const mongoose = require('mongoose');
-require('../app_api/models/db'); // sets up connection + models
+require('../app_api/models/db'); // sets up connection and models
 const Trip = require('../app_api/models/trips');
 const fs = require('fs');
 
@@ -11,7 +11,7 @@ function makeCode(name = '') {
     .normalize('NFKD')                 // normalize smart quotes/accents
     .replace(/[^\w\s-]/g, '')          // drop non-word chars
     .trim()
-    .replace(/\s+/g, '-')              // spaces -> hyphen
+    .replace(/\s+/g, '-')              // spaces to hyphen
     .toUpperCase();
 }
 
@@ -24,11 +24,11 @@ function makeCode(name = '') {
   const docs = items.map(t => ({
     code:  t.code || makeCode(t.name),
     name:  t.name,
-    image: t.image,         // keep "/images/reef1.jpg" — controller strips it
+    image: t.image,         
     desc1: t.desc1,
     desc2: t.desc2,
 
-    // optional niceties for the SPA
+    // for the SPA
     resort: t.resort || `${t.name.split(' ')[0]} Resort`,
     length: t.length || '3 days',
     perPerson: t.perPerson || t.price || 399

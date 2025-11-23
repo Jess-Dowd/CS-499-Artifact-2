@@ -6,7 +6,13 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   name:  { type: String, required: true, trim: true },
   hash:  { type: String, required: true },
-  salt:  { type: String, required: true }
+  salt:  { type: String, required: true },
+  // New user role
+  role: {
+    type: String,
+    enum: ['admin', 'editor', 'viewer'],
+    default: 'viewer'
+  }
 });
 
 // set password (stores salt + hash)
@@ -24,7 +30,7 @@ userSchema.methods.validPassword = function(password){
 // issue JWT
 userSchema.methods.generateJWT = function(){
   return jwt.sign(
-    { _id: this._id, email: this.email, name: this.name },
+    { _id: this._id, email: this.email, name: this.name, role: this.role },
     process.env.JWT_SECRET,
     { expiresIn: '1h' }
   );
