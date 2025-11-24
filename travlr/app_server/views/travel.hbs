@@ -17,16 +17,18 @@
 							<div class="body">
 								<h1>Travel</h1>
 
-								<ul id="sites">
-								{{#each trips}}
-									<li>
-									<a href="/travel"><img src="{{image}}" alt="Img"></a>
-									<h2><a href="/travel">{{name}}</a></h2>
-									<p>{{desc1}}</p>
-									<p>{{desc2}}</p>
-									</li>
-								{{/each}}
-								</ul>
+								<link rel="stylesheet" href="/css/style.css" type="text/css">
+									<ul id="sites">
+									{{#each trips}}
+										<li>
+										<a href="/travel"><img src="/images/{{image}}" alt="{{name}}"></a>
+										<h2><a href="/travel">{{name}}</a></h2>
+										<div class="trip-description">
+											{{{description}}}
+										</div>
+										</li>
+									{{/each}}
+									</ul>
 
 							</div>
 						</div>

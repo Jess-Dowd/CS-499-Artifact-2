@@ -54,10 +54,11 @@ router.get('/trips', ctrlTrips.listTrips);
 router.get('/trips/:tripCode', ctrlTrips.readTrip);
 
 // protect writes
-// router.post('/trips', ctrl.createTrip);
-// router.put('/trips/:tripCode', ctrl.tripsUpdateTrip);
+
 router.post('/trips', authenticateJWT, requireRole('admin'), ctrlTrips.createTrip);
 router.put('/trips/:tripCode', authenticateJWT, requireRole('admin'), ctrlTrips.tripsUpdateTrip);
+// router.post('/trips', ctrl.createTrip);
+// router.put('/trips/:tripCode', ctrl.tripsUpdateTrip);
 // (optional) delete
 // router.delete('/trips/:tripCode', authenticateJWT, ctrlTrips.deleteTrip);
 

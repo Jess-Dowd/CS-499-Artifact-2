@@ -1,7 +1,7 @@
 <!-- <pre>{{trips | json}}</pre> -->
 
 
-<div class="container my-3">
+<div *ngIf="isLoggedIn(); else loggedOut" class="container my-3">
   <button class="btn btn-primary mb-3" *ngIf="isAdmin()" (click)="addTrip()">Add Trip</button>
 
   <div class="row">
@@ -11,3 +11,10 @@
   </div>
 </div>
 
+<!-- Logged-out view -->
+<ng-template #loggedOut>
+  <div class="container my-5 text-center">
+    <p class="text-muted mb-3">Please log in to view and manage trips.</p>
+    <a routerLink="/login" class="btn btn-primary">Log in</a>
+  </div>
+</ng-template>
