@@ -14,19 +14,23 @@ export class AuthenticationService {
 
   authResp: AuthResponse = new AuthResponse();
 
+  // Get JWT token from browser storage
   public getToken(): string {
     const t = this.storage.getItem('travlr-token');
     return t || '';
   }
 
+  // Save JWT to storage after login/register
   public saveToken(token: string): void {
     this.storage.setItem('travlr-token', token);
   }
 
+  // Remove token to log out user
   public logout(): void {
     this.storage.removeItem('travlr-token');
   }
 
+  // Check if a valid (non-expired) token exists
   public isLoggedIn(): boolean {
     const token = this.getToken();
     if (!token) return false;
@@ -38,25 +42,28 @@ export class AuthenticationService {
     }
   }
 
+  // Decode token and return current user data
+  // Token includes: _id, email, name, role
   public getCurrentUser() {
-  const token = this.getToken();
-  if (!token) {
-    return null;
-  }
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  // token now has: _id, email, name, role
-  return {
-    email: payload.email,
-    name: payload.name,
-    role: payload.role || 'viewer'
-  };
-}
+    const token = this.getToken();
+    if (!token) return null;
 
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return {
+      email: payload.email,
+      name: payload.name,
+      role: payload.role || 'viewer'   // Default role
+    };
+  }
+
+  // True if the user's role in the token is admin
+  // Enhancement 2: Used to control access to the admin user directory page.
   public isAdmin(): boolean {
     const user = this.getCurrentUser();
     return !!user && user.role === 'admin';
   }
 
+  // Login via API, then store the returned JWT
   public login(user: User, passwd: string): void {
     this.tripDataService.login(user, passwd).subscribe({
       next: (value: any) => {
@@ -66,6 +73,7 @@ export class AuthenticationService {
     });
   }
 
+  // Register via API, then store the returned JWT
   public register(user: User, passwd: string): void {
     this.tripDataService.register(user, passwd).subscribe({
       next: (value: any) => {

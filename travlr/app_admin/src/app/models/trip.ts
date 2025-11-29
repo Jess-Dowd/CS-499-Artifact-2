@@ -1,27 +1,12 @@
-// export interface Trip {
-//   code: string;
-//   name: string;
-//   image?: string;
-
-  
-//   desc1?: string;
-//   desc2?: string;
-
-
-//   resort?: string;
-//   length?: string;
-//   perPerson?: number;
-//   description?: string;
-// }
-
 export interface Trip {
-  _id: string;       // MongoDB _id
-  code: string;
-  name: string;
-  length: string;
-  resort: string;
-  perPerson: number;
-  image: string;
-  description: string;
-  start: string;
+  _id: string;       // MongoDB document ID
+
+  code: string;      // Trip code (unique identifier)
+  name: string;      // Trip name/title
+  length: string;    // Duration of the trip
+  resort: string;    // Resort/company name
+  perPerson: number; // Cost per person
+  image: string;     // Image filename in assets
+  description: string; // Trip details/HTML description
+  start: string;       // Start date of the trip
 }

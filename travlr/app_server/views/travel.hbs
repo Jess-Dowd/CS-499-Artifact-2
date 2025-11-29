@@ -1,41 +1,53 @@
 <!DOCTYPE html>
-<!-- Website template by freewebsitetemplates.com -->
 <html>
 <head>
 	<meta charset="UTF-8">
 	<title>Dive Sites - Bhaccasyoniztas Beach Resort Website Template</title>
+	
+	<!-- Loads the main CSS for the legacy Handlebars front-end -->
 	<link rel="stylesheet" href="/travlr/public/css/style.css" type="text/css">
 </head>
+
 <body>
 	<div id="background">
 		<div id="page">
+
 			{{> header}}
 
-				<div id="contents">
-					<div class="box">
-						<div>
-							<div class="body">
-								<h1>Travel</h1>
+			<div id="contents">
+				<div class="box">
+					<div>
+						<div class="body">
+							<h1>Travel</h1>
 
-								<link rel="stylesheet" href="/css/style.css" type="text/css">
-									<ul id="sites">
-									{{#each trips}}
-										<li>
+							<!-- Local stylesheet for page-specific styles -->
+							<link rel="stylesheet" href="/css/style.css" type="text/css">
+
+							<ul id="sites">
+
+								{{!-- Render each trip returned by app_server/controllers/travel.js --}}
+								{{#each trips}}
+									<li>
+										<!-- Trip image and name -->
 										<a href="/travel"><img src="/images/{{image}}" alt="{{name}}"></a>
 										<h2><a href="/travel">{{name}}</a></h2>
+										<!-- Trip description allows HTML from the API -->
 										<div class="trip-description">
 											{{{description}}}
 										</div>
-										</li>
-									{{/each}}
-									</ul>
+									</li>
+								{{/each}}
 
-							</div>
+							</ul>
+
+							
 						</div>
 					</div>
 				</div>
+			</div>
 
 			{{> footer}}
+
 		</div>
 	</div>
 </body>

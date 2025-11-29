@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-12 col-lg-10 mx-auto">
+
+    <!-- Enhancement 3: Admin user directory card -->
+    <div class="card mt-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Admin: User Directory</span>
+
+        <!-- Shows number of users loaded -->
+        <span class="badge badge-info" *ngIf="users.length">
+          {{ users.length }} users
+        </span>
+      </div>
+
+      <div class="card-body">
+
+        <!-- Error message -->
+        <div *ngIf="error" class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+
+        <!-- Loading message -->
+        <div *ngIf="loading" class="alert alert-info" role="alert">
+          Loading users...
+        </div>
+
+        <!-- No users found -->
+        <p *ngIf="!loading && !error && !users.length">
+          No users found.
+        </p>
+
+        <!-- Enhancement 3: User table with editable roles -->
+        <div class="table-responsive" *ngIf="!loading && !error && users.length">
+          <table class="table table-striped table-hover table-sm mb-0">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col" style="width: 160px;">Role</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Loop through each user from backend -->
+              <tr *ngFor="let u of users">
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+
+                <!-- Role dropdown triggers onRoleChange() -->
+                <td>
+                  <select
+                    class="custom-select custom-select-sm"
+                    [ngModel]="u.role"
+                    (ngModelChange)="onRoleChange(u, $event)"
+                  >
+                    <option value="viewer">Viewer</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

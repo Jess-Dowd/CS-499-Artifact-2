@@ -1,17 +1,24 @@
-<!-- <pre>{{trips | json}}</pre> -->
-
-
+<!-- Main trip list (only visible when logged in) -->
 <div *ngIf="isLoggedIn(); else loggedOut" class="container my-3">
-  <button class="btn btn-primary mb-3" *ngIf="isAdmin()" (click)="addTrip()">Add Trip</button>
 
+  <!-- Enhancement 2:
+       Add Trip button only appears for admin accounts.
+       Uses RBAC check from AuthenticationService. -->
+  <button class="btn btn-primary mb-3" *ngIf="isAdmin()" (click)="addTrip()">
+    Add Trip
+  </button>
+
+  <!-- Grid of trip cards -->
   <div class="row">
     <div *ngFor="let trip of trips" class="col-3 mb-4">
+      <!-- Each trip is passed into a reusable TripCard component -->
       <app-trip-card [trip]="trip" class="card-deck mt-2"></app-trip-card>
     </div>
   </div>
 </div>
 
-<!-- Logged-out view -->
+
+<!-- Logged-out view: shown when no valid JWT -->
 <ng-template #loggedOut>
   <div class="container my-5 text-center">
     <p class="text-muted mb-3">Please log in to view and manage trips.</p>

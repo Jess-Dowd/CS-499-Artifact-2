@@ -2,10 +2,12 @@
 const express = require('express');
 const router = express.Router();
 
-// ✅ Destructure to avoid “undefined” property lookups
+// Import controller method
 const { travelList } = require('../controllers/travel');
 
-// ✅ Pass the function, do NOT call it here
+/* Route for the Travel page
+ * Renders Handlebars view by calling travelList().
+ */
 router.get('/travel', travelList);
 
 module.exports = router;

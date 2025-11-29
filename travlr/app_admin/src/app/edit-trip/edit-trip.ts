@@ -13,8 +13,13 @@ import type { Trip } from '../models/trip';
   styleUrls: ['./edit-trip.css']
 })
 export class EditTripComponent implements OnInit {
+
+  /* Reactive form used to display and edit the selected trip */
   public editForm!: FormGroup;
+
+  /* Holds the trip retrieved from the API */
   trip!: Trip;
+
   submitted = false;
   message = '';
 
@@ -25,7 +30,12 @@ export class EditTripComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // get tripCode stashed by the card
+    /* Enhancement 2:
+     * Editing is now admin-only. The backend will block non-admins.
+     * The front-end loads the trip details into a form for editing.
+     */
+
+    // Trip code stored earlier when clicking "Edit Trip"
     const tripCode = localStorage.getItem('tripCode');
     if (!tripCode) {
       alert("Couldn't find tripCode");
@@ -33,7 +43,7 @@ export class EditTripComponent implements OnInit {
       return;
     }
 
-    // build form
+    // Build the form structure
     this.editForm = this.formBuilder.group({
       _id: [],
       code:        [tripCode, Validators.required],
@@ -46,12 +56,12 @@ export class EditTripComponent implements OnInit {
       description: ['', Validators.required]
     });
 
-    // load trip and patch into form
+    // Load the trip from the API and populate the form fields
     this.tripDataService.getTrip(tripCode).subscribe({
       next: (value: Trip) => {
         this.trip = value;
 
-        // If API returns Date, convert to yyyy-mm-dd for the <input type="date">
+        // Convert trip.start into yyyy-mm-dd format for <input type="date">
         const startStr = value.start
           ? new Date(value.start).toISOString().slice(0, 10)
           : '';
@@ -67,10 +77,14 @@ export class EditTripComponent implements OnInit {
     });
   }
 
+  /* Called when the user submits the edited trip */
   public onSubmit(): void {
     this.submitted = true;
+
     if (this.editForm.valid) {
       const payload: Trip = this.editForm.value;
+
+      // Update trip in backend (admin-only, enforced by Enhancement 2)
       this.tripDataService.updateTrip(payload).subscribe({
         next: (resp) => {
           console.log('Updated:', resp);
@@ -81,5 +95,6 @@ export class EditTripComponent implements OnInit {
     }
   }
 
+  // Helper for form validation in the template
   get f() { return this.editForm.controls; }
 }

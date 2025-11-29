@@ -1,14 +1,39 @@
+<!-- Trip card component
+     Displays a single trip with image, resort, description, and pricing.
+-->
+
 <div class="card" style="width: 16rem;">
+  
+  <!-- Trip name -->
   <div class="card-header">{{ trip.name }}</div>
-  <img src="assets/images/{{ trip.image }}" alt="trip thumbnail" class="card-img-top">
+
+  <!-- Trip thumbnail -->
+  <img src="assets/images/{{ trip.image }}" 
+       alt="trip thumbnail" 
+       class="card-img-top">
+
   <div class="card-body">
+
+    <!-- Resort name -->
     <h6 class="card-subtitle mb-2 text-muted">{{ trip.resort }}</h6>
+
+    <!-- Trip length + cost -->
     <p class="card-subtitle mt-3 mb-3 text-muted">
       {{ trip.length }} only {{ trip.perPerson | currency:'USD': 'symbol' }} per person
     </p>
+
+    <!-- Trip description (HTML from DB) -->
     <p class="card-text" [innerHTML]="trip.description"></p>
-    <button class="btn btn-sm btn-primary btn-secondary mt-2" *ngIf="isAdmin()" (click)="editTrip(trip)">Edit Trip</button>
+
+    <!-- Enhancement 2:
+         The Edit Trip button is now protected by RBAC.
+         Only users with the admin role will see this button.
+    -->
+    <button class="btn btn-sm btn-primary btn-secondary mt-2"
+            *ngIf="isAdmin()"
+            (click)="editTrip(trip)">
+      Edit Trip
+    </button>
 
   </div>
 </div>
-

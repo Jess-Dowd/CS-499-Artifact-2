@@ -1,31 +1,24 @@
 // app_api/routes/index.js
-// const express = require('express');
-// const router = express.Router();
-// const ctrl = require('../controllers/trips');
-
-// router.get('/trips', ctrl.listTrips);
-// router.get('/trips/:tripCode', ctrl.readTrip);
-// router.post('/trips', ctrl.createTrip);
-// router.put('/trips/:tripCode', ctrl.tripsUpdateTrip);
-
-
-// module.exports = router;
-
-
-// app_api/routes/index.js
 const express = require('express');
 const router = express.Router();
+
 const ctrlTrips = require('../controllers/trips');
 const authController = require('../controllers/authentication');
-const jwt = require('jsonwebtoken'); // for middleware
-// const tripsController = require('../controllers/trips');
+const jwt = require('jsonwebtoken');
+const ctrlUsers = require('../controllers/users');
 
-// --- JWT auth middleware
+// JWT authentication middleware  (Enhancement 2)
+// Extracts and verifies the JWT, then attaches the decoded payload
+// to req.auth for use in permission checks.
+// - Used by any protected route (trips writes, admin users, etc.)
+// ---------------------------------------------------------------
 function authenticateJWT(req, res, next) {
   const authHeader = req.headers['authorization'];
   if (!authHeader) return res.sendStatus(401);
+
   const parts = authHeader.split(' ');
   if (parts.length < 2) return res.sendStatus(401);
+
   const token = parts[1];
   try {
     const verified = jwt.verify(token, process.env.JWT_SECRET);
@@ -36,6 +29,10 @@ function authenticateJWT(req, res, next) {
   }
 }
 
+// Role-based access check  (Enhancement 2)
+// Blocks requests unless the user's JWT contains the required role.
+// - Used for admin-only routes (trip writes, user management)
+// ---------------------------------------------------------------
 function requireRole(role) {
   return function (req, res, next) {
     if (!req.auth || !req.auth.role) {
@@ -48,27 +45,32 @@ function requireRole(role) {
   };
 }
 
-
-// trips (public reads)
+// Trip routes  (Enhancement 2 protects writes)
+// Public: read-only (GET)
+// Admin only: create/update (POST, PUT) when JWT + role = admin
+// ---------------------------------------------------------------
 router.get('/trips', ctrlTrips.listTrips);
 router.get('/trips/:tripCode', ctrlTrips.readTrip);
 
-// protect writes
-
 router.post('/trips', authenticateJWT, requireRole('admin'), ctrlTrips.createTrip);
 router.put('/trips/:tripCode', authenticateJWT, requireRole('admin'), ctrlTrips.tripsUpdateTrip);
-// router.post('/trips', ctrl.createTrip);
-// router.put('/trips/:tripCode', ctrl.tripsUpdateTrip);
-// (optional) delete
+
+// (optional) delete trip route
 // router.delete('/trips/:tripCode', authenticateJWT, ctrlTrips.deleteTrip);
 
-// auth
+// Auth routes
+// Handles user registration + login (returns JWT used above)
+// ---------------------------------------------------------------
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
-router
-  .route('/trips/:tripCode')
-  .get(ctrlTrips.readTrip)
-  .put(authenticateJWT, ctrlTrips.tripsUpdateTrip);
+// ADMIN-ONLY USER MANAGEMENT  (Enhancement 3)
+// These routes were added to support the new admin user directory page.
+// - GET lists all users
+// - PUT updates allowed fields
+// Both require a valid JWT and admin role.
+// ---------------------------------------------------------------
+router.get('/users', authenticateJWT, requireRole('admin'), ctrlUsers.listUsers);
+router.put('/users/:userId', authenticateJWT, requireRole('admin'), ctrlUsers.updateUser);
 
 module.exports = router;
